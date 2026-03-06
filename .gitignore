@@ -7,6 +7,3 @@ backend/.env
 frontend/node_modules/
 frontend/dist/
 frontend/.env
-
-package-lock.json
-package.json
