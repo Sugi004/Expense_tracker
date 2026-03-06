@@ -117,6 +117,15 @@ export default function Expenses() {
         }
     };
 
+    if (loading) return (
+        <div className="min-h-screen bg-gray-100">
+            <Navbar />
+            <div className="flex items-center justify-center h-96">
+                <p className="text-gray-500 text-lg">Loading...</p>
+            </div>
+        </div>
+    )
+
     return (
         <div className="min-h-screen bg-gray-100">
             <Navbar />

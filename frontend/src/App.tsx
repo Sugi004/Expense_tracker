@@ -3,10 +3,10 @@ import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./context/ProtectedRoute";
-import Dashboard from "./pages/dashboard";
+import Dashboard from "./pages/Dashboard";
 import Expenses from "./pages/Expenses";
 import Budgets from "./pages/Budgets";
-import Categories from "./pages/categories";
+import Categories from "./pages/Categories";
 
 function App() {
 
