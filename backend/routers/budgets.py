@@ -3,7 +3,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from database import get_db
 from typing import Optional
-from datetime import datetime
 import models, schemas
 from auth import get_current_user
 

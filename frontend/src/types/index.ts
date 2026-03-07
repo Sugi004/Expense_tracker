@@ -3,6 +3,18 @@ export interface User {
     name: string;
     email: string;
     createdAt: string;
+    
+}
+
+export interface UserResponse {
+    id: string;
+    name: string;
+    email: string;
+    createdAt: string;
+    full_name?: string;
+    phone_number?: string;
+    date_of_birth?: string;
+    profile_picture?: string;
 }
 export interface Token{
     access_token: string;

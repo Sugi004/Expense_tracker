@@ -19,7 +19,13 @@ async def register(user_data: schemas.UserCreate, db: AsyncSession = Depends(get
             detail="Email already registered",
         )
     hashed_password = hash_password(user_data.password)
-    new_user = models.User(email=user_data.email, hashed_password=hashed_password)
+    new_user = models.User(
+        email=user_data.email, 
+        hashed_password=hashed_password,
+        full_name=user_data.full_name,
+        phone_number=user_data.phone_number,
+        date_of_birth=user_data.date_of_birth
+        )
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)

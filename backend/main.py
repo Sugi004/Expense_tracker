@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
 import models
-from routers import auth, categories, expenses, budgets, dashboard
+from routers import auth, categories, expenses, budgets, dashboard, users
 
 app = FastAPI(
     title="Expense Tracker API",
@@ -31,7 +31,7 @@ app.include_router(categories.router)
 app.include_router(expenses.router)
 app.include_router(budgets.router)
 app.include_router(dashboard.router)
-
+app.include_router(users.router)
 #  Health check
 @app.get("/")
 async def root():

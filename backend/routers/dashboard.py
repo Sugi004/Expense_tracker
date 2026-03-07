@@ -50,7 +50,6 @@ async def get_dashboard(db: AsyncSession = Depends(get_db), current_user: models
             )
         )
 
-
     #  Get 5 most recent expenses
     recent_result = await db.execute(select(models.Expense)
         .where(models.Expense.user_id == current_user.id)

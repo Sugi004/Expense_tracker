@@ -6,14 +6,43 @@ from typing import Optional
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
+    full_name: Optional[str] = None
+    phone_number: Optional[str] = None
+    date_of_birth: Optional[datetime] = None
+    profile_picture: Optional[str] = None
+
+    def model_post_init(self, __context):
+        if self.date_of_birth is not None and self.date_of_birth.tzinfo is not None:
+            self.date_of_birth = self.date_of_birth.replace(tzinfo= None)
 
 class UserResponse(BaseModel):
     id: int
     email: EmailStr
+    full_name: Optional[str] = None
+    phone_number: Optional[str] = None
+    date_of_birth: Optional[datetime] = None
+    profile_picture: Optional[str] = None
     created_at: datetime
 
     class Config:
         from_attributes = True
+
+class UserUpdate(BaseModel):
+    full_name: Optional[str] = None
+    phone_number: Optional[str] = None
+    date_of_birth: Optional[datetime] = None
+    profile_picture: Optional[str] = None
+
+    def model_post_init(self, __context):
+        if self.date_of_birth is not None and self.date_of_birth.tzinfo is not None:
+            self.date_of_birth = self.date_of_birth.replace(tzinfo= None)
+
+class ChangePassword(BaseModel):
+    current_password: str
+    new_password: str
+
+class DeleteUser(BaseModel):
+    password: str
 
 class Token(BaseModel):
     access_token: str
