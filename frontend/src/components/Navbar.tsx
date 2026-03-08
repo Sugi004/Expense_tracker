@@ -14,7 +14,11 @@ export const Navbar = () => {
     <>
       <nav className="bg-white shadow-sm px-6 flex justify-between items-center">
         <div className="flex gap-6">
-          <Link to="/dashboard" className="font-bold text-blue-600 text-lg">
+          <Link to="/dashboard" className="flex items-center gap-2 font-bold text-blue-600 text-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" className="w-8 h-8">
+              <rect width="100" height="100" rx="20" fill="#2563eb" />
+              <text x="50" y="68" font-size="60" text-anchor="middle" fill="white">💰</text>
+            </svg>
             Expense Tracker
           </Link>
           <Link
