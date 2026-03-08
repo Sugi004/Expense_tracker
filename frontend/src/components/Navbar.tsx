@@ -35,6 +35,12 @@ export const Navbar = () => {
           >
             Categories
           </Link>
+          <Link
+            to="/profile"
+            className="text-gray-600 hover:text-blue-600 transition"
+          >
+            Profile
+          </Link>
           <button onClick={handleLogout} className="text-sm text-red-500 hover:text-red-700 transition">
             Logout
           </button>

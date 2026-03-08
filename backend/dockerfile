@@ -9,4 +9,4 @@ COPY . /app
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "[IP_ADDRESS]", "--port", "8000", "--reload"]
+CMD ["uvicorn", "main:app", "--host", "[IP_ADDRESS]", "--port", "8000"]

@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Expenses from "./pages/Expenses";
 import Budgets from "./pages/Budgets";
 import Categories from "./pages/Categories";
+import Profile from "./pages/Profile";
 
 function App() {
 
@@ -34,6 +35,11 @@ function App() {
           <Route path="/categories" element={
             <ProtectedRoute>
               <Categories />
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           } />
           <Route path="*" element={<Navigate to="/login" />} />
