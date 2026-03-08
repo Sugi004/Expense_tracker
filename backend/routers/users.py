@@ -10,6 +10,8 @@ import csv
 import io
 from fastapi.responses import StreamingResponse
 import base64
+from PIL import Image
+from io import BytesIO
 
 
 router = APIRouter(prefix="/users", tags=["users"])
@@ -105,6 +107,11 @@ async def upload_profile_picture(
         )
     # Read and encode the image
     image_bytes = await file.read()
+    image = Image.open(io.BytesIO(image_bytes))
+    image.thumbnail((300, 300))
+    output = io.BytesIO()
+    image.save(output, format="JPEG", quality=85)
+    image_bytes = output.getvalue()
     base64_image = f"data:{file.content_type};base64,{base64.b64encode(image_bytes).decode('utf-8')}"
     
     # Update user's profile picture
