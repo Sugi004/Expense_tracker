@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const saveToken = sessionStorage.getItem("token");
-        console.log("Token: ", saveToken);
+        console.log("Token from saveToken: ", saveToken);
         if (saveToken) {
             setAuthToken(saveToken);
         }
@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const login = (newToken: string) => {
         sessionStorage.setItem("token", newToken);
-        console.log("Token: ", newToken);
+        console.log("Token from authcontext: ", newToken);
         setAuthToken(newToken);
     }
 
