@@ -4,7 +4,7 @@ import type { Category } from "../types/index";
 import Navbar from "../components/Navbar";
 
 
-const categories = () => {
+const Categories = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -148,4 +148,4 @@ const categories = () => {
     )
 }
 
-export default categories
+export default Categories
