@@ -13,7 +13,12 @@ app = FastAPI(
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000", "http://localhost:8000","d19qyt06k846b6.cloudfront.net" "*"],
+    allow_origins=["http://localhost:5173", 
+    "http://localhost:3000", 
+    "http://localhost:8000",
+    "d19qyt06k846b6.cloudfront.net",
+    "https://main.d1dpelxbk6hsb.amplifyapp.com/", 
+    "*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
