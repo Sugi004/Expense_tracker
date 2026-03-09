@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getExpenses, createExpense, updateExpense, deleteExpense } from "../api/expenses"
 import { getCategories } from "../api/categories";
 import type { Expense, Category } from "../types/index.ts";
-import { Navbar } from "../components/Navbar";
+import Navbar from "../components/Navbar";
 
 export default function Expenses() {
     const [expenses, setExpenses] = useState<Expense[]>([]);
