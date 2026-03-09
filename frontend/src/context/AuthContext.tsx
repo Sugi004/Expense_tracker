@@ -24,7 +24,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, [])
 
     const login = (newToken: string) => {
-
         sessionStorage.setItem("token", newToken);
         setToken(newToken);
     }
