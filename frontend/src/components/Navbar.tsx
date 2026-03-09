@@ -1,56 +1,67 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-export const Navbar = () => {
+const Navbar = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
+  const navLinks = [
+    { path: "/dashboard", label: "Dashboard" },
+    { path: "/expenses", label: "Expenses" },
+    { path: "/budgets", label: "Budgets" },
+    { path: "/categories", label: "Categories" },
+    { path: "/profile", label: "Profile" },
+  ];
+
   return (
-    <>
-      <nav className="bg-white shadow-sm px-6 flex justify-between items-center">
-        <div className="flex gap-6">
-          <Link to="/dashboard" className="flex items-center gap-2 font-bold text-blue-600 text-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" className="w-8 h-8">
-              <rect width="100" height="100" rx="20" fill="#2563eb" />
-              <text x="50" y="68" font-size="60" text-anchor="middle" fill="white">💰</text>
-            </svg>
-            Expense Tracker
+    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link to="/dashboard" className="flex items-center gap-2">
+            <div className="bg-indigo-600 text-white rounded-lg w-8 h-8 flex items-center justify-center text-lg font-bold">
+              💰
+            </div>
+            <span className="font-bold text-indigo-600 text-lg hidden sm:block">
+              Expense Tracker
+            </span>
           </Link>
-          <Link
-            to="/expenses"
-            className="text-gray-600 hover:text-blue-600 transition"
-          >
-            Expenses
-          </Link>
-          <Link
-            to="/budgets"
-            className="text-gray-600 hover:text-blue-600 transition"
-          >
-            Budgets
-          </Link>
-          <Link
-            to="/categories"
-            className="text-gray-600 hover:text-blue-600 transition"
-          >
-            Categories
-          </Link>
-          <Link
-            to="/profile"
-            className="text-gray-600 hover:text-blue-600 transition"
-          >
-            Profile
-          </Link>
-          <button onClick={handleLogout} className="text-sm text-red-500 hover:text-red-700 transition">
-            Logout
-          </button>
+
+          {/* Nav Links */}
+          <div className="flex items-center gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 ${location.pathname === link.path
+                  ? "bg-indigo-50 text-indigo-600"
+                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+
+            {/* Divider */}
+            <div className="w-px h-6 bg-gray-200 mx-2" />
+
+            {/* Logout */}
+            <button
+              onClick={handleLogout}
+              className="px-3 py-2 rounded-md text-sm font-medium text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors duration-150"
+            >
+              Logout
+            </button>
+          </div>
         </div>
-      </nav>
-    </>
+      </div>
+    </nav>
   );
 };
 

@@ -8,42 +8,54 @@ import Expenses from "./pages/Expenses";
 import Budgets from "./pages/Budgets";
 import Categories from "./pages/Categories";
 import Profile from "./pages/Profile";
+import { AnimatePresence, motion } from "framer-motion";
 
 function App() {
-
+  const PageWrapper = ({ children }: { children: React.ReactNode }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2 }}
+    >
+      {children}
+    </motion.div>
+  );
   return (
     <AuthProvider>
       <Router>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/expenses" element={
-            <ProtectedRoute>
-              <Expenses />
-            </ProtectedRoute>
-          } />
-          <Route path="/budgets" element={
-            <ProtectedRoute>
-              <Budgets />
-            </ProtectedRoute>
-          } />
-          <Route path="/categories" element={
-            <ProtectedRoute>
-              <Categories />
-            </ProtectedRoute>
-          } />
-          <Route path="/profile" element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          } />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
+            <Route path="/register" element={<PageWrapper><Register /></PageWrapper>} />
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <PageWrapper><Dashboard /></PageWrapper>
+              </ProtectedRoute>
+            } />
+            <Route path="/expenses" element={
+              <ProtectedRoute>
+                <PageWrapper><Expenses /></PageWrapper>
+              </ProtectedRoute>
+            } />
+            <Route path="/budgets" element={
+              <ProtectedRoute>
+                <PageWrapper><Budgets /></PageWrapper>
+              </ProtectedRoute>
+            } />
+            <Route path="/categories" element={
+              <ProtectedRoute>
+                <PageWrapper><Categories /></PageWrapper>
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <PageWrapper><Profile /></PageWrapper>
+              </ProtectedRoute>
+            } />
+            <Route path="*" element={<Navigate to="/login" />} />
+          </Routes>
+        </AnimatePresence>
       </Router>
     </AuthProvider>
   )
