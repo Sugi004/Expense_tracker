@@ -36,6 +36,22 @@ async def update_profile(
     await db.refresh(current_user)
     return current_user
 
+@router.put("/me/change-password")
+async def change_password(
+    password_data: schemas.ChangePassword,
+    current_user: models.User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    if not verify_password(password_data.current_password, current_user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Current password is incorrect"
+        )
+    current_user.hashed_password = hash_password(password_data.new_password)
+    await db.commit()
+    await db.refresh(current_user)
+    return {"message": "Password changed successfully"}
+
 @router.delete("/me")
 async def delete_account(data: schemas.DeleteUser, db: AsyncSession=Depends(get_db), current_user: models.User = Depends(get_current_user)):
     if not verify_password(data.password, current_user.hashed_password):
