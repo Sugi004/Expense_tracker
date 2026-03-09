@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [authToken, setAuthToken] = useState<string | null>(() => {
         return sessionStorage.getItem("token")
     });
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
 
     // useEffect(() => {
     //     const saveToken = sessionStorage.getItem("token");
@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ token: authToken, setToken: setAuthToken, isAuthenticated: !!authToken, isLoading, logout, login }}>
+        <AuthContext.Provider value={{ token: authToken, setToken: setAuthToken, isAuthenticated: !!authToken, isLoading: false, logout, login }}>
             {children}
         </AuthContext.Provider>
     );
