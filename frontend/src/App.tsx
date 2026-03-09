@@ -10,7 +10,8 @@ import Categories from "./pages/Categories";
 import Profile from "./pages/Profile";
 import { AnimatePresence, motion } from "framer-motion";
 
-function App() {
+const App = () => {
+  const location = useLocation();
   const PageWrapper = ({ children }: { children: React.ReactNode }) => (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -21,7 +22,7 @@ function App() {
       {children}
     </motion.div>
   );
-  const location = useLocation();
+
   return (
     <AuthProvider>
       <Router>
