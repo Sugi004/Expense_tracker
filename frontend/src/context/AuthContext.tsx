@@ -12,29 +12,31 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [token, setToken] = useState<string | null>(sessionStorage.getItem("token"));
+    const [authToken, setAuthToken] = useState<string | null>(sessionStorage.getItem("token"));
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const saveToken = sessionStorage.getItem("token");
+        console.log("Token: ", saveToken);
         if (saveToken) {
-            setToken(saveToken);
+            setAuthToken(saveToken);
         }
         setIsLoading(false);
     }, [])
 
     const login = (newToken: string) => {
         sessionStorage.setItem("token", newToken);
-        setToken(newToken);
+        console.log("Token: ", newToken);
+        setAuthToken(newToken);
     }
 
     const logout = () => {
         sessionStorage.removeItem("token");
-        setToken(null);
+        setAuthToken(null);
     }
 
     return (
-        <AuthContext.Provider value={{ token, setToken, isAuthenticated: !!token, isLoading, logout, login }}>
+        <AuthContext.Provider value={{ token: authToken, setToken: setAuthToken, isAuthenticated: !!authToken, isLoading, logout, login }}>
             {children}
         </AuthContext.Provider>
     );
