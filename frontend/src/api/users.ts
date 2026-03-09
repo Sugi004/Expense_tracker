@@ -19,7 +19,7 @@ export const deleteAccount = async (password: string): Promise<UserResponse> => 
 export const uploadProfilePicture = async (file: File): Promise<UserResponse> => {
     const formData = new FormData();
     formData.append("file", file);
-    const response = await api.post<UserResponse>("/users/me/picture", formData, {
+    const response = await api.post<UserResponse>("/users/me/profile-picture", formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         },

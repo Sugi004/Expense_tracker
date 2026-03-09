@@ -121,7 +121,7 @@ const Budgets = () => {
     )
     return (
         <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
-
+            <Navbar />
             {/* Header */}
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-gray-800">Budgets</h1>

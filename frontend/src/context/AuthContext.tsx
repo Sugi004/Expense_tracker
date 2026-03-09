@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 interface AuthContextType {
     token: string | null;
@@ -15,31 +15,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [authToken, setAuthToken] = useState<string | null>(() => {
         return sessionStorage.getItem("token")
     });
-    // const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    // useEffect(() => {
-    //     const saveToken = sessionStorage.getItem("token");
-    //     console.log("Token from saveToken: ", saveToken);
-    //     if (saveToken) {
-    //         setAuthToken(saveToken);
-    //     }
-    //     setIsLoading(false);
-    // }, [])
+    useEffect(() => {
+        const saveToken = sessionStorage.getItem("token");
+        if (saveToken) {
+            setAuthToken(saveToken);
+        }
+        setIsLoading(false);
+    }, [])
 
     const login = (newToken: string) => {
         sessionStorage.setItem("token", newToken);
-        console.log("Token from authcontext: ", newToken);
         setAuthToken(newToken);
     }
 
     const logout = () => {
-        console.log("Logout");
         sessionStorage.removeItem("token");
         setAuthToken(null);
     }
 
     return (
-        <AuthContext.Provider value={{ token: authToken, setToken: setAuthToken, isAuthenticated: !!authToken, isLoading: false, logout, login }}>
+        <AuthContext.Provider value={{ token: authToken, setToken: setAuthToken, isAuthenticated: !!authToken, isLoading: isLoading, logout, login }}>
             {children}
         </AuthContext.Provider>
     );
