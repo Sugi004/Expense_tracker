@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from database import get_db
-from auth import get_current_user
+from auth import get_current_user, verify_password, hash_password
 from sqlalchemy.orm import Session
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -35,6 +35,8 @@ async def update_profile(
     await db.commit()
     await db.refresh(current_user)
     return current_user
+
+# Change password
 
 @router.put("/me/change-password")
 async def change_password(
