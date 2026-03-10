@@ -11,7 +11,8 @@ import io
 from fastapi.responses import StreamingResponse
 import base64
 from PIL import Image
-from io import BytesIO
+from io import BytesIO  
+from sqlalchemy import delete 
 
 
 router = APIRouter(prefix="/users", tags=["users"])
@@ -31,6 +32,8 @@ async def update_profile(
     current_user: models.User = Depends(get_current_user)
 ):
     for field, value in data.model_dump(exclude_unset = True).items():
+        if field == "user_id":
+            continue
         setattr(current_user, field, value)
     await db.commit()
     await db.refresh(current_user)
@@ -61,7 +64,11 @@ async def delete_account(data: schemas.DeleteUser, db: AsyncSession=Depends(get_
             status_code = status.HTTP_400_BAD_REQUEST,
             detail="Incorrect Password"
         )
-    await db.delete(current_user)
+    user_id = current_user.id
+    await db.execute(delete(models.Expense).where(models.Expense.user_id==user_id))
+    await db.execute(delete(models.Budget).where(models.Budget.user_id==user_id))
+    await db.execute(delete(models.Category).where(models.Category.user_id==user_id))
+    await db.execute(delete(models.User).where(models.User.id==user_id))
     await db.commit()
     return {"message": "Account Deleted Successfully"}
 
