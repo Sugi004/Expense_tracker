@@ -3,13 +3,13 @@ import { getBudgets, createBudget, updateBudget, deleteBudget } from "../api/bud
 import Navbar from "../components/Navbar";
 import type { Budget, Category } from "../types/index";
 import { getCategories } from "../api/categories";
+import toast from "react-hot-toast";
 
 const Budgets = () => {
     const [budgets, setBudgets] = useState<Budget[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
-    const [error, setError] = useState("");
     const [editingBudget, setEditingBudget] = useState<Budget | null>(null);
     // Form state
     const [form, setForm] = useState({
@@ -32,7 +32,7 @@ const Budgets = () => {
             setBudgets(budgetsData);
             setCategories(categoriesData);
         } catch (error) {
-            setError("Failed to fetch data");
+            toast.error("Failed to fetch data");
         } finally {
             setLoading(false);
         }
@@ -50,12 +50,11 @@ const Budgets = () => {
         });
         setEditingBudget(null);
         setShowForm(false);
-        setError("");
     };
 
     const handleSubmit = async () => {
         if (!form.amount || !form.category_id) {
-            setError("Please fill all the required fields");
+            toast.error("Please fill all the required fields");
             return;
         }
 
@@ -80,7 +79,7 @@ const Budgets = () => {
             setEditingBudget(null);
             fetchData();
         } catch (error) {
-            setError("Failed to save budget");
+            toast.error("Failed to save budget");
         }
     };
 
@@ -102,7 +101,7 @@ const Budgets = () => {
             await deleteBudget(id);
             setBudgets(budgets.filter(budget => Number(budget.id) !== id));
         } catch (error: any) {
-            setError(error.message || "Failed to delete budget");
+            toast.error(error.message || "Failed to delete budget");
         }
     };
 
@@ -134,12 +133,6 @@ const Budgets = () => {
                         + Add Budget
                     </button>
                 </div>
-
-                {error && (
-                    <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
-                        {error}
-                    </div>
-                )}
 
                 {/* Form */}
                 {showForm && (

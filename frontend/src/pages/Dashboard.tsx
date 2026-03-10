@@ -11,9 +11,8 @@ const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"
 
 const Dashboard = () => {
   const [data, setData] = useState<DashboardData | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -71,9 +70,9 @@ const Dashboard = () => {
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
                   <Pie
-                   data={data?.category_summary.map((item, index) => ({
-                    ...item,
-                    fill: COLORS[index % COLORS.length]
+                    data={data?.category_summary.map((item, index) => ({
+                      ...item,
+                      fill: COLORS[index % COLORS.length]
                     }))}
                     dataKey="spent"
                     nameKey="category"
@@ -81,7 +80,7 @@ const Dashboard = () => {
                     cy="50%"
                     outerRadius={80}
                     label={({ name }) => name as string}
-                 / >
+                  />
                   <Tooltip formatter={(value) => `$${Number(value).toFixed(2)}`} />
                 </PieChart>
               </ResponsiveContainer>

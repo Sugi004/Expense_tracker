@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { getCategories, createCategory, deleteCategory } from "../api/categories";
 import type { Category } from "../types/index";
 import Navbar from "../components/Navbar";
+import toast from "react-hot-toast";
 
 
 const Categories = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const [showForm, setShowForm] = useState(false);
     const [name, setName] = useState("");
 
@@ -20,7 +20,7 @@ const Categories = () => {
             const categoriesData = await getCategories();
             setCategories(categoriesData);
         } catch (error) {
-            setError("Failed to fetch data");
+            toast.error("Failed to fetch data");
         } finally {
             setLoading(false);
         }
@@ -28,7 +28,7 @@ const Categories = () => {
 
     const handleSubmit = async () => {
         if (!name) {
-            setError("Please enter a category name");
+            toast.error("Please enter a category name");
             return;
         }
         try {
@@ -36,9 +36,8 @@ const Categories = () => {
             setCategories([...categories, created]);
             setName("");
             setShowForm(false);
-            setError("");
         } catch (error: any) {
-            setError(error.response?.data?.detail || "Failed to create category");
+            toast.error(error.response?.data?.detail || "Failed to create category");
         }
     };
 
@@ -48,7 +47,7 @@ const Categories = () => {
             await deleteCategory(id);
             setCategories(categories.filter(category => Number(category.id) !== id));
         } catch (error) {
-            setError("Failed to delete category");
+            toast.error("Failed to delete category");
         }
     };
 
@@ -74,12 +73,6 @@ const Categories = () => {
                     </button>
                 </div>
 
-                {error && (
-                    <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
-                        {error}
-                    </div>
-                )}
-
                 {/* Form */}
                 {showForm && (
                     <div className="bg-white rounded-2xl shadow-sm p-6 space-y-4">
@@ -102,7 +95,7 @@ const Categories = () => {
                                 Save
                             </button>
                             <button
-                                onClick={() => { setShowForm(false); setName(""); setError("") }}
+                                onClick={() => { setShowForm(false); setName("") }}
                                 className="bg-gray-100 text-gray-600 px-6 py-2 rounded-lg hover:bg-gray-200 transition"
                             >
                                 Cancel

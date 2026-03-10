@@ -1,12 +1,12 @@
 import api from "./axios";
-import type { UserResponse } from "../types/index";
+import type { UserResponse, UserUpdate } from "../types/index";
 
 export const getProfile = async (): Promise<UserResponse> => {
     const response = await api.get("/users/me");
     return response.data;
 }
 
-export const updateProfile = async (data: Partial<UserResponse>): Promise<UserResponse> => {
+export const updateProfile = async (data: UserUpdate): Promise<UserResponse> => {
     const response = await api.put("/users/me", data);
     return response.data;
 }

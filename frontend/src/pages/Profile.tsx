@@ -11,6 +11,7 @@ import {
 } from "../api/users"
 import type { UserResponse } from "../types"
 import Navbar from "../components/Navbar"
+import toast from "react-hot-toast"
 
 const Profile = () => {
     const { logout } = useAuth()
@@ -19,8 +20,6 @@ const Profile = () => {
 
     const [profile, setProfile] = useState<UserResponse | null>(null)
     const [loading, setLoading] = useState(true)
-    const [success, setSuccess] = useState("")
-    const [error, setError] = useState("")
     const [showChangePassword, setShowChangePassword] = useState(false)
     const [showDeleteAccount, setShowDeleteAccount] = useState(false)
     const [uploadingPicture, setUploadingPicture] = useState(false)
@@ -55,7 +54,7 @@ const Profile = () => {
                     : ""
             })
         } catch (err: any) {
-            setError("Failed to load profile")
+            toast.error("Failed to load profile")
         } finally {
             setLoading(false)
         }
@@ -77,10 +76,9 @@ const Profile = () => {
                 date_of_birth: profileForm.date_of_birth || undefined
             })
             setProfile(updated)
-            setSuccess("Profile updated successfully!")
-            setError("")
+            toast.success("Profile updated successfully!")
         } catch (err: any) {
-            setError(err.response?.data?.detail || "Failed to update profile")
+            toast.error(err.response?.data?.detail || "Failed to update profile")
         }
     }
 
@@ -91,10 +89,9 @@ const Profile = () => {
         try {
             const updated = await uploadProfilePicture(file)
             setProfile(updated)
-            setSuccess("Profile picture updated!")
-            setError("")
+            toast.success("Profile picture updated!")
         } catch (err: any) {
-            setError(err.response?.data?.detail || "Failed to upload picture")
+            toast.error(err.response?.data?.detail || "Failed to upload picture")
         } finally {
             setUploadingPicture(false)
         }
@@ -102,31 +99,30 @@ const Profile = () => {
 
     const handleChangePassword = async () => {
         if (!passwordForm.current_password || !passwordForm.new_password || !passwordForm.confirm_password) {
-            setError("Please fill in all fields")
+            toast.error("Please fill in all fields")
             return
         }
         if (passwordForm.new_password !== passwordForm.confirm_password) {
-            setError("New passwords do not match")
+            toast.error("New passwords do not match")
             return
         }
         if (passwordForm.new_password.length < 6) {
-            setError("New password must be at least 6 characters")
+            toast.error("New password must be at least 6 characters")
             return
         }
         try {
             await changePassword(passwordForm.current_password, passwordForm.new_password)
-            setSuccess("Password changed successfully!")
-            setError("")
+            toast.success("Password changed successfully!")
             setPasswordForm({ current_password: "", new_password: "", confirm_password: "" })
             setShowChangePassword(false)
         } catch (err: any) {
-            setError(err.response?.data?.detail || "Failed to change password")
+            toast.error(err.response?.data?.detail || "Failed to change password")
         }
     }
 
     const handleDeleteAccount = async () => {
         if (!deletePassword) {
-            setError("Please enter your password")
+            toast.error("Please enter your password")
             return
         }
         try {
@@ -134,16 +130,16 @@ const Profile = () => {
             logout()
             navigate("/login")
         } catch (err: any) {
-            setError(err.response?.data?.detail || "Failed to delete account")
+            toast.error(err.response?.data?.detail || "Failed to delete account")
         }
     }
 
     const handleExport = async () => {
         try {
             await exportExpenses()
-            setSuccess("Expenses exported successfully!")
+            toast.success("Expenses exported successfully!")
         } catch (err: any) {
-            setError("Failed to export expenses")
+            toast.error("Failed to export expenses")
         }
     }
 
@@ -162,18 +158,6 @@ const Profile = () => {
             <div className="max-w-2xl mx-auto px-6 py-8 space-y-6">
 
                 <h1 className="text-2xl font-bold text-gray-800">Profile</h1>
-
-                {success && (
-                    <div className="bg-green-50 text-green-600 p-3 rounded-lg text-sm">
-                        {success}
-                    </div>
-                )}
-
-                {error && (
-                    <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
-                        {error}
-                    </div>
-                )}
 
                 {/* Profile Picture */}
                 <div className="bg-white rounded-2xl shadow-sm p-6">

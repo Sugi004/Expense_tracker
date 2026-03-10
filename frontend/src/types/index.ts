@@ -16,6 +16,13 @@ export interface UserResponse {
     date_of_birth?: string;
     profile_picture?: string;
 }
+
+export interface UserUpdate{
+    full_name?: string;
+    phone_number?: string;
+    date_of_birth?: string;
+    profile_picture?: string;
+}
 export interface Token{
     access_token: string;
     token_type: string;

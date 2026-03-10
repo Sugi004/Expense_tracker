@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { register } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
+import toast from 'react-hot-toast'
 
 export const Register = () => {
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { login: authLogin } = useAuth();
@@ -16,13 +16,12 @@ export const Register = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        setError("");
         try {
             const data = await register(email, password, fullName, phone);
             authLogin(data.access_token);
             navigate("/dashboard");
         } catch (error: any) {
-            setError(error.response?.data?.detail || "Registration failed");
+            toast.error(error.response?.data?.detail || "Registration failed");
         } finally {
             setLoading(false);
         }
@@ -33,7 +32,6 @@ export const Register = () => {
             <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
                 <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-md">
                     <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Create an account</h2>
-                    {error && <div className="bg-red-50 text-red-600 p-3 rounded mb-4">{error}</div>}
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Full Name</label>

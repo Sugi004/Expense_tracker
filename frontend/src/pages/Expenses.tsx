@@ -3,13 +3,13 @@ import { getExpenses, createExpense, updateExpense, deleteExpense } from "../api
 import { getCategories } from "../api/categories";
 import type { Expense, Category } from "../types/index.ts";
 import Navbar from "../components/Navbar";
+import toast from "react-hot-toast";
 
 export default function Expenses() {
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
 
     // Form state
@@ -35,7 +35,7 @@ export default function Expenses() {
             setExpenses(expensesData);
             setCategories(categoriesData);
         } catch (error) {
-            setError("Failed to fetch data");
+            toast.error("Failed to fetch data");
         } finally {
             setLoading(false);
         }
@@ -56,7 +56,6 @@ export default function Expenses() {
         });
         setEditingExpense(null);
         setShowForm(false);
-        setError("");
     };
 
     const handleEdit = (expense: Expense) => {
@@ -74,7 +73,7 @@ export default function Expenses() {
 
     const handleSubmit = async () => {
         if (!form.title || !form.amount || !form.date || !form.category_id) {
-            setError("Please fill all the required fields");
+            toast.error("Please fill all the required fields");
             return;
         }
 
@@ -102,7 +101,7 @@ export default function Expenses() {
             setEditingExpense(null);
             fetchData();
         } catch (error) {
-            setError("Failed to save expense");
+            toast.error("Failed to save expense");
         }
     };
 
@@ -113,7 +112,7 @@ export default function Expenses() {
             await deleteExpense(id);
             setExpenses(expenses.filter(expense => Number(expense.id) !== id));
         } catch (error: any) {
-            setError(error.message || "Failed to delete expense");
+            toast.error(error.message || "Failed to delete expense");
         }
     };
 
@@ -136,10 +135,6 @@ export default function Expenses() {
                         + Add Expense
                     </button>
                 </div>
-
-                {error && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg text-sm">{error}</div>
-                )}
 
                 {/* Form */}
                 {showForm && (
