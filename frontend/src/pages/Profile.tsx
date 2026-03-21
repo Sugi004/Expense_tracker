@@ -38,10 +38,9 @@ const Profile = () => {
 
     const [deletePassword, setDeletePassword] = useState("")
 
-    useEffect(() => {
-        fetchProfile()
-    }, [])
+    useEffect(() => { fetchProfile() }, [])
 
+    // Fetch profile on mount
     const fetchProfile = async () => {
         try {
             const data = await getProfile()
@@ -60,14 +59,17 @@ const Profile = () => {
         }
     }
 
+    // Handle profile form input changes
     const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setProfileForm({ ...profileForm, [e.target.name]: e.target.value })
     }
 
+    // Handle password form input changes
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value })
     }
 
+    // Update profile info
     const handleUpdateProfile = async () => {
         try {
             const updated = await updateProfile({
@@ -82,6 +84,7 @@ const Profile = () => {
         }
     }
 
+    // Upload profile picture
     const handlePictureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (!file) return
@@ -97,6 +100,7 @@ const Profile = () => {
         }
     }
 
+    // Change password with validation
     const handleChangePassword = async () => {
         if (!passwordForm.current_password || !passwordForm.new_password || !passwordForm.confirm_password) {
             toast.error("Please fill in all fields")
@@ -120,6 +124,7 @@ const Profile = () => {
         }
     }
 
+    // Delete account and logout
     const handleDeleteAccount = async () => {
         if (!deletePassword) {
             toast.error("Please enter your password")
@@ -134,6 +139,7 @@ const Profile = () => {
         }
     }
 
+    // Export expenses as CSV
     const handleExport = async () => {
         try {
             await exportExpenses()
@@ -155,16 +161,16 @@ const Profile = () => {
     return (
         <div className="min-h-screen bg-gray-100">
             <Navbar />
-            <div className="max-w-2xl mx-auto px-6 py-8 space-y-6">
+            <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
 
-                <h1 className="text-2xl font-bold text-gray-800">Profile</h1>
 
-                {/* Profile Picture */}
-                <div className="bg-white rounded-2xl shadow-sm p-6">
-                    <h2 className="text-lg font-semibold text-gray-700 mb-4">Profile Picture</h2>
-                    <div className="flex items-center gap-6">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Profile</h1>
+
+                <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
+                    <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-4">Profile Picture</h2>
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
                         <div
-                            className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-white text-2xl font-bold cursor-pointer overflow-hidden"
+                            className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-white text-2xl font-bold cursor-pointer overflow-hidden shrink-0"
                             onClick={() => fileInputRef.current?.click()}
                         >
                             {profile?.profile_picture ? (
@@ -177,7 +183,7 @@ const Profile = () => {
                                 profile?.email?.charAt(0).toUpperCase()
                             )}
                         </div>
-                        <div>
+                        <div className="text-center sm:text-left">
                             <button
                                 onClick={() => fileInputRef.current?.click()}
                                 disabled={uploadingPicture}
@@ -198,8 +204,8 @@ const Profile = () => {
                 </div>
 
                 {/* Account Info */}
-                <div className="bg-white rounded-2xl shadow-sm p-6 space-y-4">
-                    <h2 className="text-lg font-semibold text-gray-700">Account Info</h2>
+                <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 space-y-4">
+                    <h2 className="text-base sm:text-lg font-semibold text-gray-700">Account Info</h2>
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
@@ -255,19 +261,18 @@ const Profile = () => {
                             className="w-full border border-gray-200 rounded-lg px-4 py-2 bg-gray-50 text-gray-500"
                         />
                     </div>
-
                     <button
                         onClick={handleUpdateProfile}
-                        className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+                        className="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
                     >
                         Save Changes
                     </button>
                 </div>
 
                 {/* Change Password */}
-                <div className="bg-white rounded-2xl shadow-sm p-6 space-y-4">
+                <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 space-y-4">
                     <div className="flex justify-between items-center">
-                        <h2 className="text-lg font-semibold text-gray-700">Change Password</h2>
+                        <h2 className="text-base sm:text-lg font-semibold text-gray-700">Change Password</h2>
                         <button
                             onClick={() => setShowChangePassword(!showChangePassword)}
                             className="text-sm text-blue-600 hover:underline"
@@ -313,7 +318,7 @@ const Profile = () => {
                             </div>
                             <button
                                 onClick={handleChangePassword}
-                                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+                                className="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
                             >
                                 Update Password
                             </button>
@@ -322,26 +327,26 @@ const Profile = () => {
                 </div>
 
                 {/* Export Expenses */}
-                <div className="bg-white rounded-2xl shadow-sm p-6">
-                    <h2 className="text-lg font-semibold text-gray-700 mb-2">Export Data</h2>
+                <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
+                    <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-2">Export Data</h2>
                     <p className="text-sm text-gray-500 mb-4">Download all your expenses as a CSV file.</p>
                     <button
                         onClick={handleExport}
-                        className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
+                        className="w-full sm:w-auto bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
                     >
                         Export Expenses as CSV
                     </button>
                 </div>
 
                 {/* Danger Zone */}
-                <div className="bg-white rounded-2xl shadow-sm p-6 space-y-4 border border-red-100">
-                    <h2 className="text-lg font-semibold text-red-600">Danger Zone</h2>
+                <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 space-y-4 border border-red-100">
+                    <h2 className="text-base sm:text-lg font-semibold text-red-600">Danger Zone</h2>
                     <p className="text-sm text-gray-500">
                         Once you delete your account all your data will be permanently removed.
                     </p>
                     <button
                         onClick={() => setShowDeleteAccount(!showDeleteAccount)}
-                        className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition"
+                        className="w-full sm:w-auto bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition"
                     >
                         Delete Account
                     </button>
@@ -357,7 +362,7 @@ const Profile = () => {
                             />
                             <button
                                 onClick={handleDeleteAccount}
-                                className="bg-red-700 text-white px-6 py-2 rounded-lg hover:bg-red-800 transition"
+                                className="w-full sm:w-auto bg-red-700 text-white px-6 py-2 rounded-lg hover:bg-red-800 transition"
                             >
                                 Confirm Delete Account
                             </button>

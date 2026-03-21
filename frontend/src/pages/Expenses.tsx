@@ -12,7 +12,6 @@ export default function Expenses() {
     const [showForm, setShowForm] = useState(false);
     const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
 
-    // Form state
     const [form, setForm] = useState({
         title: "",
         description: "",
@@ -22,10 +21,9 @@ export default function Expenses() {
         note: ""
     });
 
-    useEffect(() => {
-        fetchData();
-    }, [])
+    useEffect(() => { fetchData(); }, [])
 
+    // Fetch expenses and categories on mount
     const fetchData = async () => {
         try {
             const [expensesData, categoriesData] = await Promise.all([
@@ -46,18 +44,12 @@ export default function Expenses() {
     };
 
     const resetForm = () => {
-        setForm({
-            title: "",
-            description: "",
-            amount: "",
-            date: "",
-            category_id: "",
-            note: ""
-        });
+        setForm({ title: "", description: "", amount: "", date: "", category_id: "", note: "" });
         setEditingExpense(null);
         setShowForm(false);
     };
 
+    // Populate form with expense data for editing
     const handleEdit = (expense: Expense) => {
         setEditingExpense(expense);
         setForm({
@@ -69,6 +61,7 @@ export default function Expenses() {
             note: expense.note || ""
         });
         setShowForm(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     const handleSubmit = async () => {
@@ -76,7 +69,6 @@ export default function Expenses() {
             toast.error("Please fill all the required fields");
             return;
         }
-
         try {
             const payload = {
                 title: form.title,
@@ -85,20 +77,15 @@ export default function Expenses() {
                 date: new Date(form.date).toISOString(),
                 category_id: parseInt(form.category_id),
                 note: form.note || undefined,
-
             }
-
             if (editingExpense) {
                 const updated = await updateExpense(Number(editingExpense.id), payload)
-                setExpenses(expenses.map(expense => expense.id === updated.id ? updated : expense));
+                setExpenses(expenses.map(e => e.id === updated.id ? updated : e));
             } else {
                 const created = await createExpense(payload);
                 setExpenses([created, ...expenses]);
             }
             resetForm();
-
-            setShowForm(false);
-            setEditingExpense(null);
             fetchData();
         } catch (error) {
             toast.error("Failed to save expense");
@@ -110,7 +97,7 @@ export default function Expenses() {
         if (!confirm("Are you sure you want to delete this expense?")) return;
         try {
             await deleteExpense(id);
-            setExpenses(expenses.filter(expense => Number(expense.id) !== id));
+            setExpenses(expenses.filter(e => Number(e.id) !== id));
         } catch (error: any) {
             toast.error(error.message || "Failed to delete expense");
         }
@@ -128,22 +115,29 @@ export default function Expenses() {
     return (
         <div className="min-h-screen bg-gray-100">
             <Navbar />
-            <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
+            {/* px-4 on mobile, px-6 on desktop */}
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+
+                {/* Header — smaller text on mobile */}
                 <div className="flex justify-between items-center">
-                    <h1 className="text-2xl font-bold text-gray-800">Expenses</h1>
-                    <button onClick={() => setShowForm(true)} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                    <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Expenses</h1>
+                    <button
+                        onClick={() => setShowForm(true)}
+                        className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm sm:text-base"
+                    >
                         + Add Expense
                     </button>
                 </div>
 
-                {/* Form */}
+                {/* Form — smaller padding on mobile */}
                 {showForm && (
-                    <div className="bg-white rounded-2xl shadow-sm p-6 space-y-4">
-                        <h2 className="text-lg font-semibold text-gray-700">
+                    <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 space-y-4">
+                        <h2 className="text-base sm:text-lg font-semibold text-gray-700">
                             {editingExpense ? "Edit Expense" : "New Expense"}
                         </h2>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Single column on mobile, two columns on sm+ */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
                                 <input
@@ -194,7 +188,8 @@ export default function Expenses() {
                                 </select>
                             </div>
 
-                            <div className="md:col-span-2">
+                            {/* Note spans full width on sm+ */}
+                            <div className="sm:col-span-2">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Note</label>
                                 <textarea
                                     name="note"
@@ -207,16 +202,16 @@ export default function Expenses() {
                             </div>
                         </div>
 
-                        <div className="flex gap-3">
+                        <div className="flex flex-col sm:flex-row gap-3">
                             <button
                                 onClick={handleSubmit}
-                                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+                                className="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
                             >
                                 {editingExpense ? "Update" : "Save"}
                             </button>
                             <button
                                 onClick={resetForm}
-                                className="bg-gray-100 text-gray-600 px-6 py-2 rounded-lg hover:bg-gray-200 transition"
+                                className="w-full sm:w-auto bg-gray-100 text-gray-600 px-6 py-2 rounded-lg hover:bg-gray-200 transition"
                             >
                                 Cancel
                             </button>
@@ -224,40 +219,48 @@ export default function Expenses() {
                     </div>
                 )}
 
-
-                {/* Expenses List */}
-                <div className="bg-white rounded-2xl shadow-sm p-6">
-                    <h2 className="text-lg font-semibold text-gray-700 mb-4">All Expenses</h2>
+                {/* Expenses list */}
+                <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
+                    <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-4">All Expenses</h2>
                     {expenses.length === 0 ? (
                         <p className="text-gray-400 text-sm">No expenses yet — add your first one!</p>
                     ) : (
                         <div className="space-y-3">
                             {expenses.map(expense => (
-                                <div key={expense.id} className="flex justify-between items-center border-b pb-3">
-                                    <div>
-                                        <p className="font-medium text-gray-800">{expense.title}</p>
+                                <div
+                                    key={expense.id}
+                                    className="flex justify-between items-start border-b pb-3 gap-2"
+                                >
+                                    {/* min-w-0 prevents long text from overflowing */}
+                                    <div className="min-w-0 flex-1">
+                                        <p className="font-medium text-gray-800 truncate">{expense.title}</p>
                                         <p className="text-sm text-gray-400">
                                             {new Date(expense.date).toLocaleDateString()} ·{" "}
                                             {categories.find(c => Number(c.id) === Number(expense.category_id))?.name || "Unknown"}
                                         </p>
                                         {expense.note && (
-                                            <p className="text-sm text-gray-500 italic">{expense.note}</p>
+                                            <p className="text-sm text-gray-500 italic truncate">{expense.note}</p>
                                         )}
                                     </div>
-                                    <div className="flex items-center gap-4">
-                                        <p className="font-semibold text-blue-600">${expense.amount.toFixed(2)}</p>
-                                        <button
-                                            onClick={() => handleEdit(expense)}
-                                            className="text-sm text-gray-500 hover:text-blue-600 transition"
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(Number(expense.id))}
-                                            className="text-sm text-gray-500 hover:text-red-600 transition"
-                                        >
-                                            Delete
-                                        </button>
+
+                                    <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1 sm:gap-4 shrink-0">
+                                        <p className="font-semibold text-blue-600">
+                                            ${expense.amount.toFixed(2)}
+                                        </p>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => handleEdit(expense)}
+                                                className="text-xs sm:text-sm text-gray-500 hover:text-blue-600 transition"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(Number(expense.id))}
+                                                className="text-xs sm:text-sm text-gray-500 hover:text-red-600 transition"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -266,6 +269,5 @@ export default function Expenses() {
                 </div>
             </div>
         </div>
-
     );
 }

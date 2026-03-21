@@ -11,7 +11,7 @@ const Budgets = () => {
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [editingBudget, setEditingBudget] = useState<Budget | null>(null);
-    // Form state
+
     const [form, setForm] = useState({
         amount: "",
         month: new Date().getMonth() + 1,
@@ -19,10 +19,9 @@ const Budgets = () => {
         category_id: ""
     });
 
-    useEffect(() => {
-        fetchData();
-    }, [])
+    useEffect(() => { fetchData(); }, [])
 
+    // Fetch budgets and categories on mount
     const fetchData = async () => {
         try {
             const [budgetsData, categoriesData] = await Promise.all([
@@ -37,10 +36,13 @@ const Budgets = () => {
             setLoading(false);
         }
     }
+
+    // Handle form input changes
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    // Reset form to default state
     const resetForm = () => {
         setForm({
             amount: "",
@@ -52,12 +54,12 @@ const Budgets = () => {
         setShowForm(false);
     };
 
+    // Create or update budget
     const handleSubmit = async () => {
         if (!form.amount || !form.category_id) {
             toast.error("Please fill all the required fields");
             return;
         }
-
         try {
             const payload = {
                 amount: parseFloat(form.amount),
@@ -65,7 +67,6 @@ const Budgets = () => {
                 year: Number(form.year),
                 category_id: Number(form.category_id)
             }
-
             if (editingBudget) {
                 const updated = await updateBudget(Number(editingBudget.id), payload)
                 setBudgets(budgets.map(budget => budget.id === updated.id ? updated : budget));
@@ -74,15 +75,13 @@ const Budgets = () => {
                 setBudgets([created, ...budgets]);
             }
             resetForm();
-
-            setShowForm(false);
-            setEditingBudget(null);
             fetchData();
         } catch (error) {
             toast.error("Failed to save budget");
         }
     };
 
+    // Populate form with budget data for editing
     const handleEdit = (budget: Budget) => {
         setEditingBudget(budget);
         setForm({
@@ -92,8 +91,10 @@ const Budgets = () => {
             category_id: budget.category_id.toString()
         });
         setShowForm(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
+    // Delete budget with confirmation
     const handleDelete = async (id: number | undefined) => {
         if (!id) return;
         if (!confirm("Are you sure you want to delete this budget?")) return;
@@ -118,30 +119,28 @@ const Budgets = () => {
             </div>
         </div>
     )
+
     return (
         <div className="min-h-screen bg-gray-100">
             <Navbar />
-            <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
-
-                {/* Header */}
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
                 <div className="flex justify-between items-center">
-                    <h1 className="text-2xl font-bold text-gray-800">Budgets</h1>
+                    <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Budgets</h1>
                     <button
                         onClick={() => setShowForm(true)}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                        className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm sm:text-base"
                     >
                         + Add Budget
                     </button>
                 </div>
 
-                {/* Form */}
                 {showForm && (
-                    <div className="bg-white rounded-2xl shadow-sm p-6 space-y-4">
-                        <h2 className="text-lg font-semibold text-gray-700">
+                    <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 space-y-4">
+                        <h2 className="text-base sm:text-lg font-semibold text-gray-700">
                             {editingBudget ? "Edit Budget" : "New Budget"}
                         </h2>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
                                 <select
@@ -195,17 +194,16 @@ const Budgets = () => {
                                 />
                             </div>
                         </div>
-
-                        <div className="flex gap-3">
+                        <div className="flex flex-col sm:flex-row gap-3">
                             <button
                                 onClick={handleSubmit}
-                                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+                                className="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
                             >
                                 {editingBudget ? "Update" : "Save"}
                             </button>
                             <button
                                 onClick={resetForm}
-                                className="bg-gray-100 text-gray-600 px-6 py-2 rounded-lg hover:bg-gray-200 transition"
+                                className="w-full sm:w-auto bg-gray-100 text-gray-600 px-6 py-2 rounded-lg hover:bg-gray-200 transition"
                             >
                                 Cancel
                             </button>
@@ -213,37 +211,45 @@ const Budgets = () => {
                     </div>
                 )}
 
-                {/* Budgets List */}
-                <div className="bg-white rounded-2xl shadow-sm p-6">
-                    <h2 className="text-lg font-semibold text-gray-700 mb-4">All Budgets</h2>
+                {/* Budgets list */}
+                <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
+                    <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-4">All Budgets</h2>
                     {budgets.length === 0 ? (
                         <p className="text-gray-400 text-sm">No budgets yet — add your first one!</p>
                     ) : (
                         <div className="space-y-3">
                             {budgets.map(budget => (
-                                <div key={budget.id} className="flex justify-between items-center border-b pb-3">
-                                    <div>
-                                        <p className="font-medium text-gray-800">
+                                <div
+                                    key={budget.id}
+                                    className="flex justify-between items-start border-b pb-3 gap-2"
+                                >
+                                    {/* min-w-0 prevents long text from overflowing */}
+                                    <div className="min-w-0 flex-1">
+                                        <p className="font-medium text-gray-800 truncate">
                                             {categories.find(c => Number(c.id) === Number(budget.category_id))?.name || "Unknown"}
                                         </p>
                                         <p className="text-sm text-gray-400">
                                             {months[budget.month - 1]} {budget.year}
                                         </p>
                                     </div>
-                                    <div className="flex items-center gap-4">
-                                        <p className="font-semibold text-green-600">${budget.amount.toFixed(2)}</p>
-                                        <button
-                                            onClick={() => handleEdit(budget)}
-                                            className="text-sm text-gray-500 hover:text-blue-600 transition"
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(Number(budget.id))}
-                                            className="text-sm text-gray-500 hover:text-red-600 transition"
-                                        >
-                                            Delete
-                                        </button>
+                                    <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1 sm:gap-4 shrink-0">
+                                        <p className="font-semibold text-green-600">
+                                            ${budget.amount.toFixed(2)}
+                                        </p>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => handleEdit(budget)}
+                                                className="text-xs sm:text-sm text-gray-500 hover:text-blue-600 transition"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(Number(budget.id))}
+                                                className="text-xs sm:text-sm text-gray-500 hover:text-red-600 transition"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
